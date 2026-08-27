@@ -196,6 +196,7 @@ class CalrunMathState extends State<CalrunWidget> {
 									IconButton(
 										icon: const Icon(Icons.close_sharp),
 										iconSize: 32,
+										tooltip: "Reset and go to the start screen",
 										onPressed: reset
 									),
 								],
