@@ -108,6 +108,16 @@ class CalrunMathState extends State<CalrunWidget> {
 		}
 	}
 
+	void reset() {
+		setState(() {
+			stopwatch
+				..reset()
+				..stop();
+
+			state = CalrunState.init;
+		});
+	}
+
 	@override
 	Widget build(BuildContext context) {
 		switch (state) {
@@ -179,7 +189,15 @@ class CalrunMathState extends State<CalrunWidget> {
 											if (state == CalrunState.solving) { stopwatch.start(); }
 											else { stopwatch.stop(); }
 										}
-									)
+									),
+									
+									const SizedBox(height: 24),
+									
+									IconButton(
+										icon: const Icon(Icons.close_sharp),
+										iconSize: 32,
+										onPressed: reset
+									),
 								],
 							),
 						),
