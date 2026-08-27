@@ -7,6 +7,7 @@ import '../widgets/time_input.dart';
 import '../widgets/settings_panel.dart';
 import '../widgets/calrun_init.dart';
 import '../widgets/calrun_finished.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 enum CalrunState {
 	init,
@@ -57,6 +58,8 @@ class CalrunWidget extends StatefulWidget {
 }
 
 class CalrunMathState extends State<CalrunWidget> {
+  final AudioPlayer audio = AudioPlayer();
+
 	ExprGenerator generator = ExprGenerator();
 	int mistakeCount = 0;
 
@@ -64,6 +67,12 @@ class CalrunMathState extends State<CalrunWidget> {
 	final Stopwatch stopwatch = Stopwatch();
 	int totalMs = 0;
 	int answerCount = 0;
+
+	@override
+	void initState() {
+		super.initState();
+		AudioCache.instance.loadAll(["sounds/impressive.wav"]);
+	}
 
 	void start() {
 		setState(() {
@@ -87,7 +96,16 @@ class CalrunMathState extends State<CalrunWidget> {
 	@override
 	void dispose() {
 		stopwatch.stop();
+    	audio.dispose();
 		super.dispose();
+	}
+
+	void tryReward(int elapsedMs, bool isValid) {
+		if (!isValid) return;
+
+		if (elapsedMs < 10000) {
+			audio.play(AssetSource("sounds/impressive.wav"));
+		}
 	}
 
 	@override
@@ -156,6 +174,8 @@ class CalrunMathState extends State<CalrunWidget> {
 											});
 
 											stopwatch.reset();
+											tryReward(elapsedMs, isValid);
+
 											if (state == CalrunState.solving) { stopwatch.start(); }
 											else { stopwatch.stop(); }
 										}
